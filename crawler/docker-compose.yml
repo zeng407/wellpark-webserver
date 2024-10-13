@@ -1,0 +1,9 @@
+services:
+  crawl-park-info:
+    build: .
+    container_name: crawl-park-info-container
+    volumes:
+      - ./output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
