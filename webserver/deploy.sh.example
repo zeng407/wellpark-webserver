@@ -1,0 +1,3 @@
+./vendor/bin/sail php artisan migrate --force
+./vendor/bin/sail php artisan schedule:interrupt
+./vendor/bin/sail php artisan queue:restart

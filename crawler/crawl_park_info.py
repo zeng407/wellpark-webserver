@@ -29,7 +29,7 @@ def main():
         data = fetch_data()
         if data:
             save_data(data)
-        time.sleep(300)  # Sleep for 5 minutes
+        time.sleep(60)  # Sleep for 1 minutes
 
 if __name__ == "__main__":
     main()
