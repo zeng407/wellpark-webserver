@@ -10,9 +10,10 @@ use Illuminate\Support\Facades\Log;
 use App\Models\ParkInformation;
 use App\Models\LatestParkInformation;
 use Carbon\Carbon;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 
-class CreateParkInfomations implements ShouldQueue
+class CreateParkInfomations implements ShouldQueue, ShouldBeUnique
 {
     use Queueable;
 

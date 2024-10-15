@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# Get the directory of the current script
+SCRIPT_DIR=$(dirname "$0")
+
 # Define source and destination directories
-SOURCE_DIR="crawler/output"
-DEST_DIR="webserver/storage/app/private/parkinfo"
+SOURCE_DIR="$SCRIPT_DIR/crawler/output"
+DEST_DIR="$SCRIPT_DIR/webserver/storage/app/private/parkinfo"
 
 # Create destination directory if it doesn't exist
 mkdir -p "$DEST_DIR"
