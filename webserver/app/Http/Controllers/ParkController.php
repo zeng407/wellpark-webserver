@@ -31,6 +31,8 @@ class ParkController extends Controller
     {
         $data = $request->validate([
             'park_no' => 'nullable|string',
+            'long' => 'nullable|numeric',
+            'lat' => 'nullable|numeric',
         ]);
 
         $model = LatestParkInformation::with('park_information')->getModel();
@@ -48,6 +50,13 @@ class ParkController extends Controller
         if(isset($data['park_no'])) {
             $qeury->where('park_no', $data['park_no']);
             logger('park_no: ' . $data['park_no']);
+        }
+
+        if(isset($data['long']) && isset($data['lat'])) {
+            $qeury->join('park_informations', 'latest_park_informations.park_information_id', '=', 'park_informations.id');
+            $qeury->selectRaw('latest_park_informations.*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance', [$data['lat'], $data['long'], $data['lat']]);
+            $qeury->orderBy('distance');
+            logger('long: ' . $data['long'] . ', lat: ' . $data['lat']);
         }
 
         return $model->setQuery($qeury);

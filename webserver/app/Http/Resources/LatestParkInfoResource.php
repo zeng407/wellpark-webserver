@@ -15,6 +15,9 @@ class LatestParkInfoResource extends JsonResource
     public function toArray(Request $request): array
     {
         $parkinfo = $this->park_information;
-        return ParkInfoResource::make($parkinfo)->toArray($request);
+        $append = [
+            'distance' => $this->distance,
+        ];
+        return ParkInfoResource::make($parkinfo)->toArray($request) + $append;
     }
 }
