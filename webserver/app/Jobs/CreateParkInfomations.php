@@ -75,14 +75,15 @@ class CreateParkInfomations implements ShouldQueue, ShouldBeUnique
 
                     $latestInfo = LatestParkInformation::where('park_no', $info['PARKNO'])->first();
 
-                    if ($latestInfo && Carbon::parse($latestInfo->update_time)->lt($info['UPDATETIME'])) {
-                        $latestInfo->update([
+                    if (!$latestInfo) {
+                        LatestParkInformation::create([
+                            'park_no' => $info['PARKNO'],
                             'park_information_id' => $id,
                             'update_time' => $info['UPDATETIME'],
                         ]);
-                    } else {
-                        LatestParkInformation::create([
-                            'park_no' => $info['PARKNO'],
+
+                    } elseif ((new Carbon($latestInfo->update_time))->lt($info['UPDATETIME'])) {
+                        $latestInfo->update([
                             'park_information_id' => $id,
                             'update_time' => $info['UPDATETIME'],
                         ]);
