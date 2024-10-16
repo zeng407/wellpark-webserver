@@ -17,7 +17,7 @@ class LatestParkInformation extends Model
         'park_information_id',
     ];
 
-    public function parkInformation()
+    public function park_information()
     {
         return $this->belongsTo(ParkInformation::class);
     }
