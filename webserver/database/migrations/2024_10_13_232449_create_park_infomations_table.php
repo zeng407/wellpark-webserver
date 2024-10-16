@@ -41,7 +41,7 @@ return new class extends Migration
             $table->id();
             $table->string('park_no')->index();
             $table->foreignId('park_information_id')->constrained();
-            $table->timestamp('update_time', 3)->index();;
+            $table->timestamp('update_time', 3)->index();
             $table->timestamps();
         });
     }
