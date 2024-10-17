@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::get('parks', [ParkController::class, 'index']);
+Route::post('park', [ParkController::class, 'store']);
 Route::get('latest-parks', [ParkController::class, 'indexLatest']);
 Route::post('pred-park', [ParkController::class, 'storePred']);
 Route::get('pred-parks', [ParkController::class, 'getPreds']);
+Route::post('park-image', [ParkController::class, 'storeImage']);
+Route::get('park-images', [ParkController::class, 'getImages']);
+

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\ParkInfoCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Storage;
@@ -47,7 +48,7 @@ class CreateParkInfomations implements ShouldQueue, ShouldBeUnique
                 foreach($data as $info){
                     // Insert info into the infobase
                     $now = now();
-                    $id = ParkInformation::create([
+                    $parkInfo = ParkInformation::create([
                         'park_no' => $info['PARKNO'],
                         'parking_name' => $info['PARKINGNAME'],
                         'address' => $info['ADDRESS'],
@@ -71,23 +72,9 @@ class CreateParkInfomations implements ShouldQueue, ShouldBeUnique
                         'update_time' => $info['UPDATETIME'],
                         'created_at' => $now,
                         'updated_at' => $now,
-                    ])->id;
+                    ]);
 
-                    $latestInfo = LatestParkInformation::where('park_no', $info['PARKNO'])->first();
-
-                    if (!$latestInfo) {
-                        LatestParkInformation::create([
-                            'park_no' => $info['PARKNO'],
-                            'park_information_id' => $id,
-                            'update_time' => $info['UPDATETIME'],
-                        ]);
-
-                    } elseif ((new Carbon($latestInfo->update_time))->lt($info['UPDATETIME'])) {
-                        $latestInfo->update([
-                            'park_information_id' => $id,
-                            'update_time' => $info['UPDATETIME'],
-                        ]);
-                    }
+                    ParkInfoCreated::dispatch($parkInfo);
                 }
 
                 // Log successful insertion
