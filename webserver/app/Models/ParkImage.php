@@ -16,6 +16,7 @@ class ParkImage extends Model
         'path',
         'url',
         'captured_at',
-        'recognition_result'
+        'recognition_result',
+        'park_information_id'
     ];
 }

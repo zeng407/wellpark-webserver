@@ -37,33 +37,69 @@ class ParkController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            // required
             'park_no' => 'required|string|max:255',
-            'parking_name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'business_hours' => 'required|string|max:255',
-            'weekdays' => 'required|string|max:255',
-            'holiday' => 'required|string|max:255',
-            'free_quantity_big' => 'required|integer',
-            'total_quantity_big' => 'required|integer',
             'free_quantity' => 'required|integer',
-            'total_quantity' => 'required|integer',
-            'free_quantity_mot' => 'required|integer',
-            'total_quantity_mot' => 'required|integer',
-            'free_quantity_dis' => 'required|integer',
-            'total_quantity_dis' => 'required|integer',
-            'free_quantity_cw' => 'required|integer',
-            'total_quantity_cw' => 'required|integer',
-            'free_quantity_ecar' => 'required|integer',
-            'total_quantity_ecar' => 'required|integer',
-            'longitude' => 'required|numeric',
-            'latitude' => 'required|numeric',
             'update_time' => 'required|date',
+
+            // optional
+            'parking_name' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:255',
+            'business_hours' => 'nullable|string|max:255',
+            'weekdays' => 'nullable|string|max:255',
+            'holiday' => 'nullable|string|max:255',
+            'free_quantity_big' => 'nullable|integer',
+            'total_quantity_big' => 'nullable|integer',
+            'total_quantity' => 'nullable|integer',
+            'free_quantity_mot' => 'nullable|integer',
+            'total_quantity_mot' => 'nullable|integer',
+            'free_quantity_dis' => 'nullable|integer',
+            'total_quantity_dis' => 'nullable|integer',
+            'free_quantity_cw' => 'nullable|integer',
+            'total_quantity_cw' => 'nullable|integer',
+            'free_quantity_ecar' => 'nullable|integer',
+            'total_quantity_ecar' => 'nullable|integer',
+            'longitude' => 'nullable|numeric',
+            'latitude' => 'nullable|numeric',
+            'park_image_id' => 'nullable|integer',
         ]);
+
+        $latestPark = LatestParkInformation::where('park_no', $data['park_no'])->first()?->park_information;
+
+
+        $data['parking_name'] = $data['parking_name'] ?? $latestPark?->parking_name ?? '';
+        $data['address'] = $data['address'] ?? $latestPark?->address ?? '';
+        $data['business_hours'] = $data['business_hours'] ?? $latestPark?->business_hours ?? '';
+        $data['weekdays'] = $data['weekdays'] ?? $latestPark?->weekdays ?? '';
+        $data['holiday'] = $data['holiday'] ?? $latestPark?->holiday ?? '';
+        $data['total_quantity_big'] = $data['total_quantity_big'] ?? $latestPark?->total_quantity_big ?? 0;
+        $data['total_quantity'] = $data['total_quantity'] ?? $latestPark?->total_quantity ?? 0;
+        $data['total_quantity_mot'] = $data['total_quantity_mot'] ?? $latestPark?->total_quantity_mot ?? 0;
+        $data['total_quantity_dis'] = $data['total_quantity_dis'] ?? $latestPark?->total_quantity_dis ?? 0;
+        $data['total_quantity_cw'] = $data['total_quantity_cw'] ?? $latestPark?->total_quantity_cw ?? 0;
+        $data['total_quantity_ecar'] = $data['total_quantity_ecar'] ?? $latestPark?->total_quantity_ecar ?? 0;
+        $data['free_quantity_cw'] = $data['free_quantity_cw'] ?? $latestPark?->free_quantity_cw ?? 0;
+        $data['free_quantity_ecar'] = $data['free_quantity_ecar'] ?? $latestPark?->free_quantity_ecar ?? 0;
+        $data['free_quantity_mot'] = $data['free_quantity_mot'] ?? $latestPark?->free_quantity_mot ?? 0;
+        $data['free_quantity_dis'] = $data['free_quantity_dis'] ?? $latestPark?->free_quantity_dis ?? 0;
+        $data['free_quantity_big'] = $data['free_quantity_big'] ?? $latestPark?->free_quantity_big ?? 0;
+        $data['longitude'] = $data['longitude'] ?? $latestPark?->longitude ?? 0;
+        $data['latitude'] = $data['latitude'] ?? $latestPark?->latitude ?? 0;
 
         $parkInfo = ParkInformation::updateOrCreate([
             'park_no' => $data['park_no'],
             'update_time' => $data['update_time'],
         ], $data);
+
+        if(isset($data['park_image_id'])) {
+            $parkImage = ParkImage::find($data['park_image_id']);
+            if($parkImage) {
+                $parkImage->update([
+                    'park_information_id' => $parkInfo->id,
+                    'recognition_result' => $parkInfo->free_quantity
+                ]);
+            }
+        }
 
         ParkInfoCreated::dispatch($parkInfo);
 
