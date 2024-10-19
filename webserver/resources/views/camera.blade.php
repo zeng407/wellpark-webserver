@@ -93,7 +93,7 @@
                 formData.append('park_no', 'nctu-demo');
 
                 try {
-                    const response = await fetch('{{ url("/api/park-image") }}', {
+                    const response = await fetch('/api/park-image', {
                         method: 'POST',
                         body: formData
                     });
