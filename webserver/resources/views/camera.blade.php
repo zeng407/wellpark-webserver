@@ -48,7 +48,7 @@
         const switchToRear = document.getElementById('switchToRear');
         let intervalId;
         let countdownId;
-        let seconds = 5;
+        let seconds = 10;
         let currentStream;
 
         // Function to start the video stream with the specified facing mode
@@ -117,7 +117,7 @@
             } else {
                 clearInterval(countdownId);
                 captureAndUpload();
-                seconds = 5; // Reset seconds after each upload
+                seconds = 10; // Reset seconds after each upload
                 countdownId = setInterval(updateTimer, 1000); // Restart countdown
             }
         }
