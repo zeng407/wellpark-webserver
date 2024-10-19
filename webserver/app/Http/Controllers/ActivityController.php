@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class ActivityController extends Controller
 {
-    public function getActivities(Request $request)
+    public function index(Request $request)
     {
         $data = $request->validate([
             'activitysdate_gte' => 'nullable|string',
@@ -26,6 +26,25 @@ class ActivityController extends Controller
         $model = $this->applySorter($model, $data);
 
         return ActivityInformationResource::collection($this->getPagination($model, $data));
+    }
+
+    public function update(Request $request)
+    {
+        $data = $request->validate([
+            'id' => 'required|integer',
+            'recognition_location' => 'required|string',
+        ]);
+
+        $activity = ActivityInformation::find($data['id']);
+        if(!$activity) {
+            return response()->json(['message' => 'Activity not found'], 404);
+        }
+
+        $activity->update([
+            'recognition_location' => $data['recognition_location'],
+        ]);
+
+        return ActivityInformationResource::make($activity);
     }
 
     protected function applyQuery(Model $model, array $data)

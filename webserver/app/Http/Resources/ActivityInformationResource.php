@@ -15,6 +15,7 @@ class ActivityInformationResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'serno' => $this->serno,
             'pubunitname' => $this->pubunitname,
             'subject' => $this->subject,
@@ -28,6 +29,7 @@ class ActivityInformationResource extends JsonResource
             'activitydateremark' => $this->activitydateremark,
             'voice' => $this->voice,
             'detailcontent' => $this->detailcontent,
+            'recognition_location' => $this->recognition_location,
         ];
     }
 }

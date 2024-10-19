@@ -25,5 +25,6 @@ class ActivityInformation extends Model
         'activitydateremark',
         'voice',
         'detailcontent',
+        'recognition_location'
     ];
 }

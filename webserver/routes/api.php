@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::get('activities', [ActivityController::class, 'getActivities']);
+Route::get('activities', [ActivityController::class, 'index']);
+Route::put('activitie', [ActivityController::class, 'update']);
 Route::get('parks', [ParkController::class, 'index']);
 Route::post('park', [ParkController::class, 'store']);
 Route::get('latest-parks', [ParkController::class, 'indexLatest']);
