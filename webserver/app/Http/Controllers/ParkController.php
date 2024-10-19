@@ -26,6 +26,7 @@ class ParkController extends Controller
             'park_no' => 'nullable|string',
             'per_page' => 'nullable|integer|max:1440',
             'page' => 'nullable|integer',
+            'update_time_gte' => 'nullable|date',
         ]);
 
         $model = ParkInformation::getModel();
@@ -252,9 +253,9 @@ class ParkController extends Controller
             logger('recognized: ' . $data['recognized']);
         }
 
-        if(isset($data['activitysdate_gte'])) {
-            $qeury->where('activitysdate', '>=', $data['activitysdate_gte']);
-            logger('activitysdate_gte: ' . $data['activitysdate_gte']);
+        if(isset($data['update_time_gte'])) {
+            $qeury->where('update_time', '>=', $data['update_time_gte']);
+            logger('update_time_gte: ' . $data['update_time_gte']);
         }
 
         return $model->setQuery($qeury);
