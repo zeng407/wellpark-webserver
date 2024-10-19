@@ -21,22 +21,30 @@
         button {
             margin: 10px;
         }
+        #timer {
+            font-size: 1.5em;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>位你好WellPark</h1>
-    <h3>停車場AI相機辨識系統</h3>
-    <video id="video" autoplay></video>
+    <h1>位你好 WellPark</h1>
+    <h3>請對準剩餘停車位LED燈拍照</h3>
+    <video id="video" autoplay playsinline></video>
     <canvas id="canvas" style="display: none;"></canvas>
     <button id="startButton">Start Upload</button>
     <button id="stopButton" style="display: none;">Stop Upload</button>
+    <div id="timer">5</div>
 
     <script>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const startButton = document.getElementById('startButton');
         const stopButton = document.getElementById('stopButton');
+        const timer = document.getElementById('timer');
         let intervalId;
+        let countdownId;
+        let seconds = 5;
 
         // Get access to the camera
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -56,8 +64,8 @@
             canvas.toBlob(async (blob) => {
                 const formData = new FormData();
                 formData.append('image', blob, 'capture.jpg');
-                formData.append('park_no', 'nctu-demo');
                 formData.append('captured_at', new Date().toISOString());
+                formData.append('park_no', 'nctu-demo');
 
                 try {
                     const response = await fetch('{{ url("/api/park-image") }}', {
@@ -76,16 +84,30 @@
             }, 'image/jpeg');
         }
 
+        // Function to update the timer
+        function updateTimer() {
+            timer.textContent = seconds;
+            if (seconds > 0) {
+                seconds--;
+            } else {
+                clearInterval(countdownId);
+                captureAndUpload();
+                seconds = 5; // Reset seconds after each upload
+                countdownId = setInterval(updateTimer, 1000); // Restart countdown
+            }
+        }
+
         // Start uploading images at intervals
         startButton.addEventListener('click', () => {
             startButton.style.display = 'none';
             stopButton.style.display = 'inline';
-            intervalId = setInterval(captureAndUpload, 5000); // Upload every 5 seconds
+            countdownId = setInterval(updateTimer, 1000); // Start countdown
         });
 
         // Stop uploading images
         stopButton.addEventListener('click', () => {
             clearInterval(intervalId);
+            clearInterval(countdownId);
             startButton.style.display = 'inline';
             stopButton.style.display = 'none';
         });
