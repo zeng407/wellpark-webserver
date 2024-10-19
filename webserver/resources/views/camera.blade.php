@@ -29,11 +29,13 @@
 </head>
 <body>
     <h1>位你好 WellPark</h1>
-    <h3>請對準剩餘停車位LED燈拍照</h3>
+    <h3>請對鏡頭對準「剩餘停車位LED燈」</h3>
     <video id="video" autoplay playsinline></video>
     <canvas id="canvas" style="display: none;"></canvas>
     <button id="startButton">Start Upload</button>
     <button id="stopButton" style="display: none;">Stop Upload</button>
+    <button id="switchToFront">Switch to Front Camera</button>
+    <button id="switchToRear">Switch to Rear Camera</button>
     <div id="timer">5</div>
 
     <script>
@@ -42,22 +44,41 @@
         const startButton = document.getElementById('startButton');
         const stopButton = document.getElementById('stopButton');
         const timer = document.getElementById('timer');
+        const switchToFront = document.getElementById('switchToFront');
+        const switchToRear = document.getElementById('switchToRear');
         let intervalId;
         let countdownId;
         let seconds = 5;
+        let currentStream;
 
-        // Get access to the camera
-        navigator.mediaDevices.getUserMedia({
-            video: {
-                facingMode: { exact: "environment" }
+        // Function to start the video stream with the specified facing mode
+        function startVideo(facingMode) {
+            const constraints = {
+                video: {
+                    facingMode: facingMode
+                }
+            };
+
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
             }
-        })
-            .then(stream => {
-                video.srcObject = stream;
-            })
-            .catch(err => {
-                console.error("Error accessing the camera: ", err);
-            });
+
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then((stream) => {
+                    currentStream = stream;
+                    video.srcObject = stream;
+                })
+                .catch((error) => {
+                    console.error('Error accessing the camera: ', error);
+                });
+        }
+
+        // Event listeners for the buttons
+        switchToFront.addEventListener('click', () => startVideo('user'));
+        switchToRear.addEventListener('click', () => startVideo('environment'));
+
+        // Start with the rear camera by default
+        startVideo('environment');
 
         // Function to capture and upload image
         async function captureAndUpload() {
