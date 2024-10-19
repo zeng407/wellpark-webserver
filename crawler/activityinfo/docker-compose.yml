@@ -1,0 +1,9 @@
+services:
+  crawl-activity-info:
+    build: .
+    container_name: crawl-activity-info-container
+    volumes:
+      - ./output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
