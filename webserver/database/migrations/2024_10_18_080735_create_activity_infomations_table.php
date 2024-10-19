@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('activityedate');
             $table->string('activityplace');
             $table->string('activitydateremark');
-            $table->string('voice');
+            $table->text('voice');
             $table->text('detailcontent');
             $table->timestamps();
         });
