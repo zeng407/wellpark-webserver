@@ -47,7 +47,11 @@
         let seconds = 5;
 
         // Get access to the camera
-        navigator.mediaDevices.getUserMedia({ video: true })
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: { exact: "environment" }
+            }
+        })
             .then(stream => {
                 video.srcObject = stream;
             })
