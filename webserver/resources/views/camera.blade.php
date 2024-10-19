@@ -56,7 +56,7 @@
             canvas.toBlob(async (blob) => {
                 const formData = new FormData();
                 formData.append('image', blob, 'capture.jpg');
-                formData.append('park_no', 'test1');
+                formData.append('park_no', 'nctu-demo');
                 formData.append('captured_at', new Date().toISOString());
 
                 try {
