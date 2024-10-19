@@ -17,6 +17,7 @@ class ParkImageResource extends JsonResource
     {
         $parkInfo = ParkInformation::where('park_no', $this->park_no)->orderByDesc('update_time')->first();
         return [
+            'id' => $this->id,
             'park_no' => $this->park_no,
             'path' => $this->path,
             'url' => $this->url,
