@@ -12,6 +12,7 @@ use App\Models\LatestParkInformation;
 use App\Models\ParkImage;
 use App\Models\ParkInformation;
 use App\Models\PredictParkInformation;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -27,6 +28,7 @@ class ParkController extends Controller
             'per_page' => 'nullable|integer|max:1440',
             'page' => 'nullable|integer',
             'update_time_gte' => 'nullable|date',
+            'update_time_lte' => 'nullable|date',
         ]);
 
         $model = ParkInformation::getModel();
@@ -184,7 +186,7 @@ class ParkController extends Controller
             'park_no' => $data['park_no'],
             'path' => $path,
             'url' => Storage::url($path),
-            'captured_at' => $data['captured_at'],
+            'captured_at' => Carbon::parse($data['captured_at'])->format('Y-m-d H:i:s')
         ]);
 
         return ParkImageResource::make($parkImage);
@@ -256,6 +258,11 @@ class ParkController extends Controller
         if(isset($data['update_time_gte'])) {
             $qeury->where('update_time', '>=', $data['update_time_gte']);
             logger('update_time_gte: ' . $data['update_time_gte']);
+        }
+
+        if(isset($data['update_time_lte'])) {
+            $qeury->where('update_time', '<=', $data['update_time_lte']);
+            logger('update_time_lte: ' . $data['update_time_lte']);
         }
 
         return $model->setQuery($qeury);
