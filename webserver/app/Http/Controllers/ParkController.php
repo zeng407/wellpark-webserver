@@ -7,6 +7,7 @@ use App\Http\Resources\LatestParkInfoResource;
 use App\Http\Resources\ParkImageResource;
 use App\Http\Resources\ParkInfoResource;
 use App\Http\Resources\PredictParkInfoResource;
+use App\Models\ActivityInformation;
 use App\Models\LatestParkInformation;
 use App\Models\ParkImage;
 use App\Models\ParkInformation;
@@ -206,6 +207,23 @@ class ParkController extends Controller
         return ParkImageResource::collection($this->getPagination($model, $data));
     }
 
+    public function getActivities(Request $request)
+    {
+        $data = $request->validate([
+            'activitysdate' => 'nullable|string',
+            'per_page' => 'nullable|integer|max:1440',
+            'page' => 'nullable|integer',
+        ]);
+        $data['sort'] = 'activitysdate';
+        $data['order'] = 'asc';
+
+        $model = ActivityInformation::getModel();
+        $model = $this->applyQuery($model, $data);
+        $model = $this->applySorter($model, $data);
+
+        return ParkInfoResource::collection($this->getPagination($model, $data));
+    }
+
     protected function applyQuery(Model $model, array $data)
     {
         $qeury = $model->getQuery();
@@ -232,6 +250,11 @@ class ParkController extends Controller
             else
                 $qeury->whereNull('recognition_result');
             logger('recognized: ' . $data['recognized']);
+        }
+
+        if(isset($data['activitysdate_gte'])) {
+            $qeury->where('activitysdate', '>=', $data['activitysdate_gte']);
+            logger('activitysdate_gte: ' . $data['activitysdate_gte']);
         }
 
         return $model->setQuery($qeury);

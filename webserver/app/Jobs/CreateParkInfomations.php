@@ -6,11 +6,8 @@ use App\Events\ParkInfoCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\ParkInformation;
-use App\Models\LatestParkInformation;
-use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 
@@ -47,7 +44,6 @@ class CreateParkInfomations implements ShouldQueue, ShouldBeUnique
 
                 foreach($data as $info){
                     // Insert info into the infobase
-                    $now = now();
                     $parkInfo = ParkInformation::create([
                         'park_no' => $info['PARKNO'],
                         'parking_name' => $info['PARKINGNAME'],
@@ -70,8 +66,6 @@ class CreateParkInfomations implements ShouldQueue, ShouldBeUnique
                         'longitude' => $info['LONGITUDE'],
                         'latitude' => $info['LATITUDE'],
                         'update_time' => $info['UPDATETIME'],
-                        'created_at' => $now,
-                        'updated_at' => $now,
                     ]);
 
                     ParkInfoCreated::dispatch($parkInfo);

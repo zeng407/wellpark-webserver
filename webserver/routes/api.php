@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\ParkController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -8,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
+Route::get('activities', [ActivityController::class, 'getActivities']);
 Route::get('parks', [ParkController::class, 'index']);
 Route::post('park', [ParkController::class, 'store']);
 Route::get('latest-parks', [ParkController::class, 'indexLatest']);

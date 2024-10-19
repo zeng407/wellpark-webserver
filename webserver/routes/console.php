@@ -10,3 +10,4 @@ use Illuminate\Support\Facades\Schedule;
 
 
 Schedule::job(new App\Jobs\CreateParkInfomations())->everyMinute()->withoutOverlapping();
+Schedule::job(new App\Jobs\CreateActivityInformations())->everyMinute()->withoutOverlapping();

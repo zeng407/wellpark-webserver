@@ -23,7 +23,7 @@ class CreateParkInfomationsTest extends TestCase
         Storage::fake();
 
         // Create a fake JSON file in the storage
-        $jsonData = json_encode([[
+        $jsonData = json_encode([
             'PARKNO' => '004',
             'PARKINGNAME' => '府後地下停車場',
             'ADDRESS' => '新竹市北區府後街42號',
@@ -45,7 +45,7 @@ class CreateParkInfomationsTest extends TestCase
             'LONGITUDE' => '120.969783',
             'LATITUDE' => '24.80726',
             'UPDATETIME' => '2024-10-13T10:02:11.083'
-        ]]);
+        ]);
 
         Storage::put('parkinfo/test.json', $jsonData);
 
