@@ -25,13 +25,10 @@
             font-size: 1.5em;
             margin-top: 10px;
         }
-        h1 {
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
-    <h1>位你好 WellPark</h1>
+    <h2>位你好 WellPark</h1>
     <h3>請對鏡頭對準「剩餘停車位LED燈」</h3>
     <video id="video" autoplay playsinline></video>
     <canvas id="canvas" style="display: none;"></canvas>
