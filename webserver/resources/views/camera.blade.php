@@ -25,6 +25,9 @@
             font-size: 1.5em;
             margin-top: 10px;
         }
+        h1 {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
